@@ -23,6 +23,9 @@ public class UserController {
         if (users.containsKey(user.getId())) {
             throw new ValidationException("Пользователь с таким id уже существует");
         }
+        if (user.getName() == null || user.getName().isEmpty()) {
+            user.setName(user.getLogin()); // Заменяем имя на логин
+        }
         user.setId(nextId++);
         users.put(user.getId(), user);
         return user;
@@ -32,6 +35,9 @@ public class UserController {
     public User updateUser(@Valid @RequestBody User user) {
         if (!users.containsKey(user.getId())) {
             throw new UserNotFoundException(user.getId());
+        }
+        if (user.getName() == null || user.getName().isEmpty()) {
+            user.setName(user.getLogin()); // Заменяем имя на логин
         }
         users.put(user.getId(), user);
         return user;
