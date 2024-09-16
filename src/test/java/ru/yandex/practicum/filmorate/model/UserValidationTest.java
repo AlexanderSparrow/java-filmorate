@@ -29,7 +29,7 @@ public class UserValidationTest {
         user.setLogin("validLogin");
         user.setBirthday(LocalDate.now().minusYears(20));
 
-        Set violations = validator.validate(user);
+        Set<jakarta.validation.ConstraintViolation<User>> violations = validator.validate(user);
         assertFalse(violations.isEmpty());
     }
 
@@ -51,7 +51,7 @@ public class UserValidationTest {
         user.setLogin("invalid login");
         user.setBirthday(LocalDate.now().minusYears(20));
 
-        Set violations = validator.validate(user);
+        Set<jakarta.validation.ConstraintViolation<User>> violations = validator.validate(user);
         assertFalse(violations.isEmpty());
     }
 
@@ -62,7 +62,7 @@ public class UserValidationTest {
         user.setLogin("validLogin");
         user.setBirthday(LocalDate.now().minusYears(20));
 
-        Set violations = validator.validate(user);
+        Set<jakarta.validation.ConstraintViolation<User>> violations = validator.validate(user);
         assertTrue(violations.isEmpty());
     }
 

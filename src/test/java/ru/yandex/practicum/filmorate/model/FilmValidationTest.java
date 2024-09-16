@@ -30,7 +30,7 @@ public class FilmValidationTest {
         film.setReleaseDate(LocalDate.now());
         film.setDuration(120);
 
-        Set violations = validator.validate(film);
+        Set<jakarta.validation.ConstraintViolation<Film>> violations = validator.validate(film);
         assertFalse(violations.isEmpty());
     }
 
@@ -42,7 +42,7 @@ public class FilmValidationTest {
         film.setReleaseDate(LocalDate.now());
         film.setDuration(120);
 
-        Set violations = validator.validate(film);
+        Set<jakarta.validation.ConstraintViolation<Film>> violations = validator.validate(film);
         assertFalse(violations.isEmpty());
     }
 
@@ -54,7 +54,7 @@ public class FilmValidationTest {
         film.setReleaseDate(LocalDate.now());
         film.setDuration(120);
 
-        Set violations = validator.validate(film);
+        Set<jakarta.validation.ConstraintViolation<Film>> violations = validator.validate(film);
         assertTrue(violations.isEmpty());
     }
 }
