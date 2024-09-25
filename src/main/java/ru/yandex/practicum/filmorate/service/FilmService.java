@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.service;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -18,9 +19,11 @@ public class FilmService {
     public Film addFilm(Film film) {
         return filmStorage.addFilm(film);
     }
-    public Film updateFilm (Film film) {
+
+    public Film updateFilm(Film film) {
         return filmStorage.updateFilm(film);
     }
+
     public void addLike(int filmId, int userId) {
         likes.computeIfAbsent(filmId, k -> new HashSet<>()).add(userId);
     }

@@ -16,12 +16,12 @@ public class UserController {
         this.userService = userService;
     }
 
-@PostMapping
+    @PostMapping
     public User addUser(@Valid @RequestBody User user) {
-    return userService.addUser(user);
+        return userService.addUser(user);
     }
 
-  @PutMapping
+    @PutMapping
     public User updateUser(@Valid @RequestBody User user) {
         return userService.updateUser(user);
     }
