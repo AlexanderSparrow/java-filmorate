@@ -30,6 +30,7 @@ public class UserController {
     public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
+
     @PutMapping("/{userId}/friends/{friendId}")
     public void addFriend(@PathVariable int userId, @PathVariable int friendId) {
         userService.addFriend(userId, friendId);
