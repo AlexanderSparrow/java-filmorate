@@ -24,7 +24,7 @@ public class UserController {
             throw new ValidationException("Пользователь с таким id уже существует");
         }
         if (user.getName() == null || user.getName().isEmpty()) {
-            user.setName(user.getLogin()); // Заменяем имя на логин
+            setDefaultName(user); // Заменяем имя на логин
         }
         user.setId(nextId++);
         users.put(user.getId(), user);
@@ -37,7 +37,7 @@ public class UserController {
             throw new UserNotFoundException(user.getId());
         }
         if (user.getName() == null || user.getName().isEmpty()) {
-            user.setName(user.getLogin()); // Заменяем имя на логин
+            setDefaultName(user); // Заменяем имя на логин
         }
         users.put(user.getId(), user);
         return user;
@@ -47,4 +47,11 @@ public class UserController {
     public List<User> getAllUsers() {
         return new ArrayList<>(users.values());
     }
+
+    private void setDefaultName(User user) {
+        if (user.getName() == null || user.getName().isEmpty()) {
+            user.setName(user.getLogin());
+        }
+    }
+
 }
