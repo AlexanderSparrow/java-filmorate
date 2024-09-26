@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
+import ru.yandex.practicum.filmorate.model.Friend;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
@@ -77,10 +78,12 @@ public class UserService {
         return userStorage.getUserById(userId);
     }
 
-    public Set<Integer> getUserFriends(int userId) {
-        log.info("Получение списка друзей для пользователя {}", userId);
-        User user = userStorage.getUserById(userId)
-                .orElseThrow(() -> new UserNotFoundException(userId));
-        return user.getFriends();
-    }
+        public Set<Friend> getUserFriends(int userId) {
+            log.info("Получение списка друзей для пользователя {}", userId);
+            User user = userStorage.getUserById(userId)
+                    .orElseThrow(() -> new UserNotFoundException(userId));
+            return user.getFriends().stream()
+                    .map(Friend::new)
+                    .collect(Collectors.toSet());
+        }
 }
