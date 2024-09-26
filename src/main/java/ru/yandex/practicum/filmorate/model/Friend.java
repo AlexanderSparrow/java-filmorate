@@ -7,6 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public  class Friend{
-    private  int id;
+public class Friend {
+    private int id;
 }
