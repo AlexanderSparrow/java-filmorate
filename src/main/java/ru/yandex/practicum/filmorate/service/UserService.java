@@ -32,9 +32,8 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException(friendId));
         log.info("Пользователь {} добавлен в друзья пользователю {}", friendId, userId);
         user.getFriends().add(friendId);  // Добавляем друга пользователю
-        log.info("Пользователь {} добавлен в друзья пользователю {}", userId, friendId) ;
+        log.info("Пользователь {} добавлен в друзья пользователю {}", userId, friendId);
         friend.getFriends().add(userId);  // Добавляем пользователя другу
-
 
         userStorage.updateUser(user);     // Обновляем пользователя
         userStorage.updateUser(friend);   // Обновляем друга
