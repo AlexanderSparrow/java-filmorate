@@ -26,4 +26,8 @@ public class Film {
 
     // Поле для хранения ID пользователей, поставивших лайк фильму
     private Set<Integer> userIds = new HashSet<>();
+
+    public int getRate() {
+        return userIds.size(); // Количество лайков
+    }
 }

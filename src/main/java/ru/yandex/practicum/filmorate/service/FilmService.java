@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 public class FilmService {
     private final FilmStorage filmStorage;
     private final UserService userService;
+    public static final Comparator<Film> FILM_COMPARATOR = Comparator.comparingInt(Film::getRate).reversed();
 
     public Film addFilm(Film film) {
         return filmStorage.addFilm(film);
@@ -24,12 +25,7 @@ public class FilmService {
     }
 
     public void addLike(int filmId, int userId) {
-        if (filmStorage.getFilmById(filmId).isEmpty()) {
-            throw new FilmNotFoundException(filmId);
-        }
-        if (userService.getUserById(userId).isEmpty()) {
-            throw new UserNotFoundException(userId);
-        }
+        userService.getUserById(userId).orElseThrow(() -> new UserNotFoundException(userId));
         Film film = filmStorage.getFilmById(filmId)
                 .orElseThrow(() -> new FilmNotFoundException(filmId));
         film.getUserIds().add(userId);
@@ -37,12 +33,7 @@ public class FilmService {
     }
 
     public void removeLike(int filmId, int userId) {
-        if (userService.getUserById(userId).isEmpty()) {
-            throw new UserNotFoundException(userId);
-        }
-        if (userService.getUserById(userId).isEmpty()) {
-            throw new UserNotFoundException(userId);
-        }
+        userService.getUserById(userId).orElseThrow(() -> new UserNotFoundException(userId));
         Film film = filmStorage.getFilmById(filmId)
                 .orElseThrow(() -> new FilmNotFoundException(filmId));
         film.getUserIds().remove(userId);
@@ -51,10 +42,7 @@ public class FilmService {
 
     public List<Film> getPopularFilms(int count) {
         return filmStorage.getAllFilms().stream()
-                .sorted((film1, film2) -> {
-                    int likesComparison = Integer.compare(film2.getUserIds().size(), film1.getUserIds().size());
-                    return likesComparison != 0 ? likesComparison : Integer.compare(film1.getId(), film2.getId());
-                })
+                .sorted(FILM_COMPARATOR)
                 .limit(count)
                 .collect(Collectors.toList());
     }

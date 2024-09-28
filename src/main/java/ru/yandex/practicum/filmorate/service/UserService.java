@@ -4,10 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
-import ru.yandex.practicum.filmorate.model.Friend;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -35,7 +33,6 @@ public class UserService {
         user.getFriends().add(friendId);  // Добавляем друга пользователю
         log.info("Пользователь {} добавлен в друзья пользователю {}", userId, friendId);
         friend.getFriends().add(userId);  // Добавляем пользователя другу
-
         userStorage.updateUser(user);     // Обновляем пользователя
         userStorage.updateUser(friend);   // Обновляем друга
     }
@@ -59,12 +56,9 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException(userId1));
         User user2 = userStorage.getUserById(userId2)
                 .orElseThrow(() -> new UserNotFoundException(userId2));
-
         Set<Integer> user1Friends = user1.getFriends();
         Set<Integer> user2Friends = user2.getFriends();
-
         user1Friends.retainAll(user2Friends); // Оставляем только общих друзей
-
         return userStorage.getAllUsers().stream()
                 .filter(user -> user1Friends.contains(user.getId()))
                 .collect(Collectors.toList());
@@ -78,12 +72,14 @@ public class UserService {
         return userStorage.getUserById(userId);
     }
 
-        public Set<Friend> getUserFriends(int userId) {
-            log.info("Получение списка друзей для пользователя {}", userId);
-            User user = userStorage.getUserById(userId)
-                    .orElseThrow(() -> new UserNotFoundException(userId));
-            return user.getFriends().stream()
-                    .map(Friend::new)
-                    .collect(Collectors.toSet());
-        }
+    public Set<User> getUserFriends(int userId) {
+        log.info("Получение списка друзей для пользователя {}", userId);
+        User user = userStorage.getUserById(userId)
+                .orElseThrow(() -> new UserNotFoundException(userId));
+        return user.getFriends().stream()
+                .map(friendId -> userStorage.getUserById(friendId)
+                        .orElseThrow(() -> new UserNotFoundException(friendId))) // Получаем объекты User по ID
+                .collect(Collectors.toSet());
+    }
+
 }

@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.model.Friend;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 
@@ -41,7 +40,7 @@ public class UserController {
     }
 
     @GetMapping("/{userId}/friends")
-    public Set<Friend> getUserFriends(@PathVariable int userId) {
+    public Set<User> getUserFriends(@PathVariable int userId) {
         return userService.getUserFriends(userId);
     }
 
