@@ -30,4 +30,11 @@ public class Film {
     public int getRate() {
         return userIds.size(); // Количество лайков
     }
+
+    // Поле для хранения жанров фильма
+    private Set<Genre> genres;
+
+    // Поле для хранения рейтинга Ассоциации кинокомпаний
+    @NotNull(message = "Рейтинг фильма должен быть указан")
+    private MpaRating mpaRating;
 }
