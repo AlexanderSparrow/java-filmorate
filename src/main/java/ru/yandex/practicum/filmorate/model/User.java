@@ -25,5 +25,5 @@ public class User {
     private LocalDate birthday;
 
     // Связи с другими пользователями (друзья) и их статус дружбы
-    private Set<Friendship> friends;
+    private Set<Integer> friends;
 }
