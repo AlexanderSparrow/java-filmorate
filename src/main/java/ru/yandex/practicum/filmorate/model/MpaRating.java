@@ -1,9 +1,13 @@
 package ru.yandex.practicum.filmorate.model;
 
-public enum MpaRating {
-    G,       // без возрастных ограничений
-    PG,      // детям рекомендуется смотреть с родителями
-    PG_13,   // детям до 13 лет просмотр не желателен
-    R,       // до 17 лет просмотр в присутствии взрослых
-    NC_17    // просмотр запрещён до 18 лет
+import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
+
+@Data
+public class MpaRating {
+
+    private int id;  // Идентификатор рейтинга
+
+    @NotBlank(message = "Рейтинг должен иметь название")
+    private String rating;  // Название рейтинга, например, G, PG, PG-13 и т.д.
 }

@@ -1,19 +1,13 @@
 package ru.yandex.practicum.filmorate.model;
 
-import lombok.Getter;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
 
-@Getter
-public enum Genre {
-    COMEDY("Комедия"),
-    DRAMA("Драма"),
-    ANIMATION("Мультфильм"),
-    THRILLER("Триллер"),
-    DOCUMENTARY("Документальный"),
-    ACTION("Боевик");
+@Data
+public class Genre {
 
-    private final String russianName;
+    private int id;  // Идентификатор жанра
 
-    Genre(String russianName) {
-        this.russianName = russianName;
-    }
+    @NotBlank(message = "Название жанра не может быть пустым")
+    private String genre;  // Название жанра
 }
