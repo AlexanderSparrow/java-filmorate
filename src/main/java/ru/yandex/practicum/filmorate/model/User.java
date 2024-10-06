@@ -4,6 +4,7 @@ import lombok.Data;
 import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -25,5 +26,5 @@ public class User {
     private LocalDate birthday;
 
     // Связи с другими пользователями (друзья) и их статус дружбы
-    private Set<Integer> friends;
+    private Set<Integer> friends = new HashSet<>();
 }
