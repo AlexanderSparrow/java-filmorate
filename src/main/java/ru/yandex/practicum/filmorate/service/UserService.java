@@ -81,5 +81,4 @@ public class UserService {
                         .orElseThrow(() -> new UserNotFoundException(friendId))) // Получаем объекты User по ID
                 .collect(Collectors.toSet());
     }
-
 }
