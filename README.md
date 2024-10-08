@@ -71,7 +71,7 @@ Filmorate — это приложение для оценки фильмов и 
 
 ```sql
 INSERT INTO films (name, description, release_date, duration, mpa_rating_id)
-VALUES ('Кин-дза-дза!', 'комедия' 'фантастика', '1986-01-01', 135, 2);
+VALUES ('Кин-дза-дза!', 'комедия', '1986-01-01', 135, 2);
 ```
 ## Пример добавления жанра к фильму
 ```sql
