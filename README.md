@@ -83,7 +83,7 @@ INSERT INTO film_genres (film_id, genre_id) VALUES (1, 4);
 ## Пример добавления пользователя:
 ```sql 
 INSERT INTO users (name, login, email, birthday)
-VALUES ('John Doe', 'johndoe', 'john.doe@example.com', '1985-06-15');
+VALUES ('Иван Данко', 'red.heat', 'ivan.danko@yahoo.com', '1976-06-15');
 ```
 
 ## Пример добавления лайка к фильму
