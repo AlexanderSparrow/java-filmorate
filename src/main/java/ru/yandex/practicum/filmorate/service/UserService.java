@@ -23,7 +23,7 @@ public class UserService {
         return userStorage.updateUser(user);
     }
 
-    public void addFriend(int userId, int friendId) {
+    public void addFriend(long userId, long friendId) {
         log.info("Добавление друга {} к пользователю {}", friendId, userId);
         User user = userStorage.getUserById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
@@ -37,7 +37,7 @@ public class UserService {
         userStorage.updateUser(friend);   // Обновляем друга
     }
 
-    public void removeFriend(int userId, int friendId) {
+    public void removeFriend(Long userId, Long friendId) {
         User user = userStorage.getUserById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
         User friend = userStorage.getUserById(friendId)
@@ -50,14 +50,14 @@ public class UserService {
         userStorage.updateUser(friend);
     }
 
-    public List<User> getCommonFriends(int userId1, int userId2) {
+    public List<User> getCommonFriends(Long userId1, Long userId2) {
         log.info("Получение спискаобщих друзей для пользователя {} и пользователя {}", userId1, userId2);
         User user1 = userStorage.getUserById(userId1)
                 .orElseThrow(() -> new UserNotFoundException(userId1));
         User user2 = userStorage.getUserById(userId2)
                 .orElseThrow(() -> new UserNotFoundException(userId2));
-        Set<Integer> user1Friends = user1.getFriends();
-        Set<Integer> user2Friends = user2.getFriends();
+        Set<Long> user1Friends = user1.getFriends();
+        Set<Long> user2Friends = user2.getFriends();
         user1Friends.retainAll(user2Friends); // Оставляем только общих друзей
         return userStorage.getAllUsers().stream()
                 .filter(user -> user1Friends.contains(user.getId()))
@@ -68,11 +68,11 @@ public class UserService {
         return userStorage.getAllUsers();
     }
 
-    public Optional<User> getUserById(int userId) {
+    public Optional<User> getUserById(Long userId) {
         return userStorage.getUserById(userId);
     }
 
-    public Set<User> getUserFriends(int userId) {
+    public Set<User> getUserFriends(Long userId) {
         log.info("Получение списка друзей для пользователя {}", userId);
         User user = userStorage.getUserById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));

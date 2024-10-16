@@ -10,7 +10,7 @@ import java.util.Set;
 @Data
 public class User {
 
-    private int id;
+    private long id;
 
     @Email(message = "Некорректный формат электронной почты")
     @NotBlank(message = "Электронная почта не может быть пустой")
@@ -26,7 +26,7 @@ public class User {
     private LocalDate birthday;
 
     // Связи с другими пользователями (друзья)
-    private Set<Integer> friends = new HashSet<>();
+    private Set<Long> friends = new HashSet<>();
 
     // Связи с другими пользователями (друзья) и их статус дружбы
     //Заготовка для DB

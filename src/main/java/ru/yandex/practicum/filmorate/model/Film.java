@@ -10,7 +10,7 @@ import java.util.Set;
 @Data
 public class Film {
 
-    private int id;
+    private long id;
 
     @NotBlank(message = "Название фильма не может быть пустым")
     private String name;
@@ -33,7 +33,7 @@ public class Film {
     private MpaRating mpaRating;
 
     // Поле для хранения ID пользователей, поставивших лайк фильму
-    private Set<Integer> userIds = new HashSet<>();
+    private Set<Long> userIds = new HashSet<>();
 
     public int getRate() {
         return userIds.size(); // Количество лайков
