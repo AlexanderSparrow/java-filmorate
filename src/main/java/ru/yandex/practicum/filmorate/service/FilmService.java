@@ -24,7 +24,7 @@ public class FilmService {
         return filmStorage.updateFilm(film);
     }
 
-    public void addLike(int filmId, int userId) {
+    public void addLike(long filmId, long userId) {
         userService.getUserById(userId).orElseThrow(() -> new UserNotFoundException(userId));
         Film film = filmStorage.getFilmById(filmId)
                 .orElseThrow(() -> new FilmNotFoundException(filmId));
@@ -32,7 +32,7 @@ public class FilmService {
         filmStorage.updateFilm(film);
     }
 
-    public void removeLike(int filmId, int userId) {
+    public void removeLike(long filmId, long userId) {
         userService.getUserById(userId).orElseThrow(() -> new UserNotFoundException(userId));
         Film film = filmStorage.getFilmById(filmId)
                 .orElseThrow(() -> new FilmNotFoundException(filmId));

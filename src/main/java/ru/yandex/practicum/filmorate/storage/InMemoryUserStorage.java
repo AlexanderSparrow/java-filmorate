@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.storage;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
@@ -14,8 +15,8 @@ import java.util.Optional;
 @Component
 public class InMemoryUserStorage implements UserStorage {
 
-    private final Map<Integer, User> users = new HashMap<>();
-    private int nextId = 1;
+    private final Map<Long, User> users = new HashMap<>();
+    private long nextId = 1;
 
     @Override
     public User addUser(User user) {
@@ -42,7 +43,7 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public Optional<User> getUserById(int id) {
+    public Optional<User> getUserById(long id) {
         return Optional.ofNullable(users.get(id));
     }
 
@@ -52,8 +53,23 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public void deleteUser(int id) {
+    public void deleteUser(long id) {
         users.remove(id);
+    }
+
+    @Override
+    public void addFriend(long userId, long friendId) {
+
+    }
+
+    @Override
+    public void removeFriend(long userId, long friendId) {
+
+    }
+
+    @Override
+    public List<User> getFriends(long userId) {
+        return List.of();
     }
 
     private void setDefaultName(User user) {

@@ -15,7 +15,7 @@ import java.util.Optional;
 @Component
 public class InMemoryFilmStorage implements FilmStorage {
 
-    private final Map<Integer, Film> films = new HashMap<>();
+    private final Map<Long, Film> films = new HashMap<>();
     private static final LocalDate startReleaseDate = LocalDate.of(1895, 12, 28);
     private int nextId = 1;
 
@@ -41,7 +41,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public Optional<Film> getFilmById(int id) {
+    public Optional<Film> getFilmById(long id) {
         return Optional.ofNullable(films.get(id));
     }
 
@@ -51,7 +51,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public void deleteFilm(int id) {
+    public void deleteFilm(long id) {
         films.remove(id);
     }
 
