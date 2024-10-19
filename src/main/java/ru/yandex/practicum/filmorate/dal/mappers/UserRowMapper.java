@@ -1,9 +1,11 @@
 package ru.yandex.practicum.filmorate.dal.mappers;
 
+import org.springframework.context.annotation.Lazy;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.dal.UserRepository;
+
 import java.util.Set;
 
 import java.sql.ResultSet;
@@ -14,7 +16,7 @@ public class UserRowMapper implements RowMapper<User> {
     private final UserRepository userRepository;
 
     // Инъекция зависимости UserRepository через конструктор
-    public UserRowMapper(UserRepository userRepository) {
+    public UserRowMapper(@Lazy UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 

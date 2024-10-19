@@ -27,6 +27,8 @@ public class UserService {
     }
 
     public User updateUser(User user) {
+        userStorage.getUserById(user.getId())
+                .orElseThrow(() -> new UserNotFoundException(user.getId()));
         return userStorage.updateUser(user);
     }
 
