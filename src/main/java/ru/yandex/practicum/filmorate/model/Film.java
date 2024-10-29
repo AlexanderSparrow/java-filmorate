@@ -30,11 +30,11 @@ public class Film {
 
     // Поле для хранения жанров фильма
     @NotNull(message = "Жанр фильма должен быть указан")
-    private Set<Genre> genres;
+    private Set<Genre> genres = new HashSet<>();
 
     // Поле для хранения рейтинга Ассоциации кинокомпаний
     @NotNull(message = "Рейтинг фильма должен быть указан")
-    private MpaRating mpaRating;
+    private Mpa mpa;
 
     // Поле для хранения ID пользователей, поставивших лайк фильму
     private Set<Long> userIds = new HashSet<>();

@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS users (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     login VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
     birthday DATE NOT NULL
 );
 
@@ -20,13 +20,13 @@ CREATE TABLE IF NOT EXISTS films (
 -- Создание таблицы жанров
 CREATE TABLE IF NOT EXISTS genres (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    genre VARCHAR(50) NOT NULL
+    genre VARCHAR(50) NOT NULL UNIQUE
 );
 
 -- Создание таблицы рейтингов MPA
 CREATE TABLE IF NOT EXISTS mpa_ratings (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    rating VARCHAR(50) NOT NULL
+    rating VARCHAR(50) NOT NULL UNIQUE
 );
 
 -- Создание таблицы статусов дружбы

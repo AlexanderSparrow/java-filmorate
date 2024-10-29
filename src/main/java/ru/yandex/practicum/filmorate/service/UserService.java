@@ -4,7 +4,9 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exception.DuplicateKeyException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
@@ -23,7 +25,11 @@ public class UserService {
         this.userStorage = userStorage;
     }
     public User addUser(User user) {
-        return userStorage.addUser(user);
+        try {
+            return userStorage.addUser(user);
+        } catch (DuplicateKeyException e) {
+            throw new ValidationException("Email already exists: " + user.getEmail());
+        }
     }
 
     public User updateUser(User user) {
@@ -77,8 +83,9 @@ public class UserService {
         return userStorage.getAllUsers();
     }
 
-    public Optional<User> getUserById(Long userId) {
-        return userStorage.getUserById(userId);
+    public Optional<User> getUserById(long id) {
+        return Optional.ofNullable(userStorage.getUserById(id)
+                .orElseThrow(() -> new UserNotFoundException(id)));
     }
 
     public Set<User> getUserFriends(Long userId) {
