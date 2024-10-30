@@ -58,7 +58,7 @@ public class FilmRowMapper implements RowMapper<Film> {
         List<Genre> genres = jdbcTemplate.query(sql, new Object[]{filmId}, (rs, rowNum) -> {
             Genre genre = new Genre();
             genre.setId(rs.getInt("id"));
-            genre.setGenre(rs.getString("genre"));
+            genre.setName(rs.getString("genre"));
             return genre;
         });
         return new HashSet<>(genres);
