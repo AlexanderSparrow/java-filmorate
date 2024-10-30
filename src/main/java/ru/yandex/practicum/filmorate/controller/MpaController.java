@@ -15,6 +15,7 @@ import java.util.List;
 public class MpaController {
 
     private final MpaService mpaService;
+
     @GetMapping
     public List<Mpa> getAllMpa() {
         return mpaService.getAllMpa();
