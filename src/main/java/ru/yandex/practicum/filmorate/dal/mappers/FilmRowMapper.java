@@ -48,7 +48,7 @@ public class FilmRowMapper implements RowMapper<Film> {
         return jdbcTemplate.queryForObject(sql, new Object[]{ratingId}, (rs, rowNum) -> {
             Mpa rating = new Mpa();
             rating.setId(rs.getInt("id"));
-            rating.setRating(rs.getString("rating"));
+            rating.setName(rs.getString("rating"));
             return rating;
         });
     }

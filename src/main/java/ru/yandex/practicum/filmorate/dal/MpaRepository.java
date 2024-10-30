@@ -8,8 +8,9 @@ import ru.yandex.practicum.filmorate.model.Mpa;
 
 
 import java.util.List;
+import java.util.Optional;
 
-    @Repository
+@Repository
     @RequiredArgsConstructor
     public class MpaRepository {
         private final JdbcTemplate jdbc;
@@ -20,4 +21,11 @@ import java.util.List;
             return jdbc.query(query, mapper);
         }
 
+    // Найти рейтинг по ID
+    public Optional<Mpa> findById(Long id) {
+        String query = "SELECT * FROM mpa_rating WHERE id = ?";
+        List<Mpa> mpaList = jdbc.query(query, mapper, id);
+        return mpaList.isEmpty() ? Optional.empty() : Optional.of(mpaList.getFirst());
     }
+
+}

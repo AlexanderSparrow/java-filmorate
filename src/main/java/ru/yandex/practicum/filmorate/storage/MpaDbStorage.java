@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.dal.mappers.MpaRowMapper;
 import ru.yandex.practicum.filmorate.model.Mpa;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @Qualifier("mpaDbStorage")
@@ -24,5 +25,12 @@ public class MpaDbStorage implements MpaStorage {
     public List<Mpa> getAllMpa() {
         String sql = "SELECT * FROM mpa_ratings ORDER BY id";
         return jdbcTemplate.query(sql, mpaRowMapper);
+    }
+
+    @Override
+    public Optional<Mpa> getMpaById(long id) {
+        String sql = "SELECT * FROM mpa_ratings WHERE ID = ?";
+        List<Mpa> mpaList = jdbcTemplate.query(sql, mpaRowMapper, id);
+        return mpaList.isEmpty() ? Optional.empty() : Optional.of(mpaList.get(0));
     }
 }

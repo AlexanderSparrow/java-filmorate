@@ -11,5 +11,5 @@ public class Mpa {
     private int id;  // Идентификатор рейтинга
 
     @NotNull(message = "Рейтинг должен иметь название")
-    private String rating;  // Название рейтинга, например, G, PG, PG-13 и т.д.
+    private String name;  // Название рейтинга, например, G, PG, PG-13 и т.д.
 }

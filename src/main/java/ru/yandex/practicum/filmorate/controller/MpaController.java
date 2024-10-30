@@ -19,4 +19,10 @@ public class MpaController {
     public List<Mpa> getAllMpa() {
         return mpaService.getAllMpa();
     }
+
+    @GetMapping("/{id}")
+    public Mpa getMpaById(@PathVariable long id) {
+        return mpaService.getMpaById(id);
+    }
+
 }
