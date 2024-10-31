@@ -26,5 +26,4 @@ public class MpaRepository {
         List<Mpa> mpaList = jdbc.query(query, mapper, id);
         return mpaList.isEmpty() ? Optional.empty() : Optional.of(mpaList.getFirst());
     }
-
 }
