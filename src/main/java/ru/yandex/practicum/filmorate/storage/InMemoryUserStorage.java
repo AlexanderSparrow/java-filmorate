@@ -58,8 +58,14 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public void addFriend(long userId, long friendId) {
-
+    public void addFriend(long userId, long friendId, int statusId) {
+        if (!users.containsKey(userId)) {
+            throw new UserNotFoundException(userId);
+        }
+        if (!users.containsKey(friendId)) {
+            throw new UserNotFoundException(friendId);
+        }
+        users.put(friendId, users.get(userId)); //TODO
     }
 
     @Override

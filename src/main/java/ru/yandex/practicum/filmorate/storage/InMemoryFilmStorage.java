@@ -24,7 +24,7 @@ public class InMemoryFilmStorage implements FilmStorage {
         if (films.containsKey(film.getId())) {
             throw new ValidationException("Фильм с таким id уже существует");
         }
-        validateReleaseDate(film);
+ //       validateReleaseDate(film);
         film.setId(nextId++);
         films.put(film.getId(), film);
         return film;
@@ -35,7 +35,6 @@ public class InMemoryFilmStorage implements FilmStorage {
         if (!films.containsKey(film.getId())) {
             throw new FilmNotFoundException(film.getId());
         }
-        validateReleaseDate(film);
         films.put(film.getId(), film);
         return film;
     }
@@ -61,11 +60,5 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public void removeLike(long filmId, long likeId) {
-    }
-
-    private void validateReleaseDate(Film film) {
-        if (film.getReleaseDate().isBefore(startReleaseDate)) {
-            throw new ValidationException("Дата релиза должна быть не раньше 28 декабря 1895 года");
-        }
     }
 }

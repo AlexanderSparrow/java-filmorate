@@ -17,13 +17,13 @@ import java.util.Optional;
         private final MpaRowMapper mapper;
 
         public List<Mpa> findAll() {
-            String query = "SELECT * FROM mpa_rating";
+            String query = "SELECT * FROM mpa_ratings ORDER BY id";
             return jdbc.query(query, mapper);
         }
 
     // Найти рейтинг по ID
     public Optional<Mpa> findById(Long id) {
-        String query = "SELECT * FROM mpa_rating WHERE id = ?";
+        String query = "SELECT * FROM mpa_ratings WHERE id = ?";
         List<Mpa> mpaList = jdbc.query(query, mapper, id);
         return mpaList.isEmpty() ? Optional.empty() : Optional.of(mpaList.getFirst());
     }

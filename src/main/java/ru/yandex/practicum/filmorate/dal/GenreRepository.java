@@ -16,15 +16,13 @@ public class GenreRepository {
     private final GenreRowMapper mapper;
 
     public List<Genre> findAll() {
-        String query = "SELECT * FROM genres";
+        String query = "SELECT * FROM genres ORDER BY id";
         return jdbc.query(query, mapper);
     }
 
-    // Найти жанр по ID
     public Optional<Genre> findById(Long id) {
         String query = "SELECT * FROM genres WHERE id = ?";
         List<Genre> genres = jdbc.query(query, mapper, id);
         return genres.isEmpty() ? Optional.empty() : Optional.of(genres.getFirst());
     }
-
 }
