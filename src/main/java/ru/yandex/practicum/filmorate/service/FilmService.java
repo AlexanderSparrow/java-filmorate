@@ -68,6 +68,7 @@ public class FilmService {
         validateUserAndFilm(filmId, userId);
         Film film = filmStorage.getFilmById(filmId).get();
         film.getUserIds().add(userId);
+        filmStorage.addLike(filmId, userId);//TODO
         filmStorage.updateFilm(film);
     }
 
@@ -75,6 +76,7 @@ public class FilmService {
         validateUserAndFilm(filmId, userId);
         Film film = filmStorage.getFilmById(filmId).get();
         film.getUserIds().remove(userId);
+        filmStorage.removeLike(filmId, userId);//TODO
         filmStorage.updateFilm(film);
     }
 

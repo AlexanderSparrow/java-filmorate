@@ -53,6 +53,7 @@ public class UserService {
         user.getFriends().add(friendId);  // Добавляем друга пользователю
         log.info("Пользователь {} добавлен в друзья пользователю {}", userId, friendId);
         friend.getFriends().add(userId);  // Добавляем пользователя другу
+        userStorage.addFriend(userId, friendId, 1); //TODO
         userStorage.updateUser(user);     // Обновляем пользователя
         userStorage.updateUser(friend);   // Обновляем друга
     }
@@ -65,7 +66,7 @@ public class UserService {
 
         user.getFriends().remove(friendId);  // Удаляем друга из списка
         friend.getFriends().remove(userId);  // Удаляем пользователя из списка друга
-
+        userStorage.removeFriend(userId,friendId);//TODO
         userStorage.updateUser(user);
         userStorage.updateUser(friend);
     }

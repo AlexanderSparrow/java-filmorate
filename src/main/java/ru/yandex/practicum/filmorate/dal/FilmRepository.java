@@ -22,7 +22,11 @@ public class FilmRepository {
 
     // Найти все фильмы
     public List<Film> findAll() {
-        String query = "SELECT * FROM films";
+        String query = "SELECT f.*, COUNT(fl.user_id) AS like_count\n" +
+                "FROM films f\n" +
+                "LEFT JOIN film_likes fl ON f.id = fl.film_id\n" +
+                "GROUP BY f.id\n" +
+                "ORDER BY like_count DESC\n";
         return jdbc.query(query, mapper);
     }
 
