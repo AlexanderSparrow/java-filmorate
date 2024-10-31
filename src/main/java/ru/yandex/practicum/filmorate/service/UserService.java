@@ -29,6 +29,7 @@ public class UserService {
         this.userStorage = userStorage;
         this.friendshipRepository = friendshipRepository;
     }
+
     public User addUser(User user) {
         try {
             return userStorage.addUser(user);
@@ -66,7 +67,7 @@ public class UserService {
 
         user.getFriends().remove(friendId);  // Удаляем друга из списка
         friend.getFriends().remove(userId);  // Удаляем пользователя из списка друга
-        userStorage.removeFriend(userId,friendId);//TODO
+        userStorage.removeFriend(userId, friendId);//TODO
         userStorage.updateUser(user);
         userStorage.updateUser(friend);
     }
