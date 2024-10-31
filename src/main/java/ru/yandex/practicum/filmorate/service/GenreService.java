@@ -26,4 +26,8 @@ public class GenreService {
         return genreStorage.getGenreById(id)
                 .orElseThrow(() -> new GenreNotFoundException(id));
     }
+
+    public boolean existsById(long id) {
+        return genreStorage.getGenreById(id).isPresent();
+    }
 }

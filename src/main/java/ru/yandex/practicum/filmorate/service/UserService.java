@@ -4,6 +4,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.dal.FriendshipRepository;
 import ru.yandex.practicum.filmorate.exception.DuplicateKeyException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
@@ -19,10 +20,14 @@ import java.util.stream.Collectors;
 public class UserService {
     @Qualifier("userDbStorage")
     private final UserStorage userStorage;
+    private final FriendshipRepository friendshipRepository;
+
 
     @Autowired
-    public UserService(@Qualifier("userDbStorage") UserStorage userStorage) {
+    public UserService(@Qualifier("userDbStorage") UserStorage userStorage,
+                       FriendshipRepository friendshipRepository) {
         this.userStorage = userStorage;
+        this.friendshipRepository = friendshipRepository;
     }
     public User addUser(User user) {
         try {

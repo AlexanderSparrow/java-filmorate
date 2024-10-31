@@ -1,95 +1,71 @@
 package ru.yandex.practicum.filmorate.storage;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.dal.FilmLikeRepository;
+import ru.yandex.practicum.filmorate.dal.FilmRepository;
 import ru.yandex.practicum.filmorate.dal.mappers.FilmRowMapper;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.Genre;
 
-import java.sql.PreparedStatement;
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Repository
 @Qualifier("filmDbStorage")
+@AllArgsConstructor
 public class FilmDbStorage implements FilmStorage {
 
+    private static final LocalDate startReleaseDate = LocalDate.of(1895, 12, 28);
     private final JdbcTemplate jdbcTemplate;
     private final FilmRowMapper filmRowMapper;
-
-    public FilmDbStorage(JdbcTemplate jdbcTemplate, FilmRowMapper filmRowMapper) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.filmRowMapper = filmRowMapper;
-    }
+    private final FilmLikeRepository filmLikeRepository;
+    private final FilmRepository filmRepository;
 
     @Override
     public Film addFilm(Film film) {
-        String sql = "INSERT INTO films (name, description, release_date, duration, mpa_rating_id) VALUES (?, ?, ?, ?, ?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, film.getName());
-            ps.setString(2, film.getDescription());
-            ps.setDate(3, java.sql.Date.valueOf(film.getReleaseDate()));
-            ps.setInt(4, film.getDuration());
-            ps.setInt(5, film.getMpa().getId());
-            return ps;
-        }, keyHolder);
-        long filmId = Objects.requireNonNull(keyHolder.getKey()).longValue();
-        film.setId(filmId);
-
-        updateFilmGenres(film);
-
+        validateReleaseDate(film);
+        filmRepository.save(film);
         return film;
+    }
+
+    private void validateReleaseDate(Film film) {
+        if (film.getReleaseDate().isBefore(startReleaseDate)) {
+            throw new ValidationException("Дата релиза должна быть не раньше 28 декабря 1895 года");
+        }
     }
 
     @Override
     public Film updateFilm(Film film) {
-        String sql = "UPDATE films SET name = ?, description = ?, release_date = ?, duration = ?, mpa_rating_id = ? WHERE id = ?";
-        jdbcTemplate.update(sql,
-                film.getName(),
-                film.getDescription(),
-                java.sql.Date.valueOf(film.getReleaseDate()),
-                film.getDuration(),
-                film.getMpa().getId(),
-                film.getId());
-
-        updateFilmGenres(film);
-
+        filmRepository.update(film);
         return film;
     }
 
     @Override
     public Optional<Film> getFilmById(long id) {
-        String sql = "SELECT * FROM films WHERE id = ?";
-        List<Film> films = jdbcTemplate.query(sql, filmRowMapper, id);
-        return films.isEmpty() ? Optional.empty() : Optional.of(films.get(0));
+        return filmRepository.findById(id);
     }
 
     @Override
     public List<Film> getAllFilms() {
-        String sql = "SELECT * FROM films";
-        return jdbcTemplate.query(sql, filmRowMapper);
+        return filmRepository.findAll();
     }
 
     @Override
     public void deleteFilm(long id) {
-        String sql = "DELETE FROM films WHERE id = ?";
-        jdbcTemplate.update(sql, id);
+        filmRepository.deleteById(id);
     }
 
-    // Метод для обновления жанров фильма
-    private void updateFilmGenres(Film film) {
-        String deleteSql = "DELETE FROM film_genres WHERE film_id = ?";
-        jdbcTemplate.update(deleteSql, film.getId());
+    @Override
+    public void addLike(long filmId, long userId) {
+        filmLikeRepository.addLike(filmId, userId); // Используем репозиторий для добавления лайка
+    }
 
-        String insertSql = "INSERT INTO film_genres (film_id, genre_id) VALUES (?, ?)";
-        for (Genre genre : film.getGenres()) {
-            jdbcTemplate.update(insertSql, film.getId(), genre.getId());
-        }
+    @Override
+    public void removeLike(long filmId, long userId) {
+        filmLikeRepository.removeLike(filmId, userId); // Используем репозиторий для удаления лайка
     }
 }

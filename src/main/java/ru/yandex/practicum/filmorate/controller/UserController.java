@@ -24,6 +24,11 @@ public class UserController {
         return userService.updateUser(user);
     }
 
+    @GetMapping("/{id}")
+    public Optional<User> getUserById(@PathVariable("id") long id) {
+        return userService.getUserById(id);
+    }
+
     @GetMapping
     public List<User> getAllUsers() {
         return userService.getAllUsers();

@@ -17,7 +17,6 @@ import java.util.Set;
 public class UserRepository {
     private final JdbcTemplate jdbc;
     private final UserRowMapper mapper;
-//    private final UserRepository userRepository;
 
     public List<User> findAll() {
         String query = "SELECT * FROM users";
@@ -45,10 +44,11 @@ public class UserRepository {
         jdbc.update(query, userId, friendId);
     }
 
-/*    public User getUserById(long id) {
+    public User getUserById(long id) {
         User user = jdbc.queryForObject("SELECT * FROM users WHERE id = ?", new Object[]{id}, mapper);
-        Set<Long> friends = userRepository.getUserFriends(id);  // Получаем список друзей в сервисе
+        Set<Long> friends = this.getUserFriends(id);  // Получаем список друзей в сервисе
+        assert user != null;
         user.setFriends(friends);
         return user;
-    }*/
+    }
 }

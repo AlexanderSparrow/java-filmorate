@@ -2,32 +2,59 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+import ru.yandex.practicum.filmorate.dal.FilmLikeRepository;
 import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Log4j2
 @Service
 public class FilmService {
+    private static final LocalDate startReleaseDate = LocalDate.of(1895, 12, 28);
+    private final FilmLikeRepository filmLikeRepository;
     private final FilmStorage filmStorage;
     private final UserService userService;
+    private final GenreService genreService;
+    private final MpaService mpaService;
     public static final Comparator<Film> FILM_COMPARATOR = Comparator.comparingInt(Film::getRate).reversed();
 
-    public FilmService(@Qualifier("filmDbStorage") FilmStorage filmStorage, UserService userService) {
+    public FilmService(FilmLikeRepository filmLikeRepository, @Qualifier("filmDbStorage") FilmStorage filmStorage, UserService userService, GenreService genreService, MpaService mpaService) {
+        this.filmLikeRepository = filmLikeRepository;
         this.filmStorage = filmStorage;
         this.userService = userService;
+        this.genreService = genreService;
+        this.mpaService = mpaService;
     }
 
     public Film addFilm(Film film) {
         log.info("Добавление фильма: {}", film);
+        validateReleaseDate(film);
+        if (!mpaService.existsById(film.getMpa().getId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Указанный MPA рейтинг не существует");
+        }
+        for (Genre genre : film.getGenres()) {
+            if (!genreService.existsById(genre.getId())) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Жанр с ID " + genre.getId() + " не существует");
+            }
+        }
         validateUniqueGenresAndMpa(film);  // Проверка на уникальность
         return filmStorage.addFilm(film);
+    }
+
+    private void validateReleaseDate(Film film) {
+        if (film.getReleaseDate().isBefore(startReleaseDate)) {
+            throw new ValidationException("Дата релиза должна быть не раньше 28 декабря 1895 года");
+        }
     }
 
     public Film updateFilm(Film film) {

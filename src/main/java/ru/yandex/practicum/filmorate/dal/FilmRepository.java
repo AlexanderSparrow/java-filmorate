@@ -7,6 +7,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.dal.mappers.FilmRowMapper;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -47,6 +48,7 @@ public class FilmRepository {
         }, keyHolder);
         long filmId = keyHolder.getKey().longValue();
         film.setId(filmId);
+        updateFilmGenres(film);
         return film;
     }
 
@@ -60,6 +62,7 @@ public class FilmRepository {
                 film.getDuration(),
                 film.getMpa().getId(),
                 film.getId());
+        updateFilmGenres(film);
         return film;
     }
 
@@ -67,5 +70,33 @@ public class FilmRepository {
     public void deleteById(long id) {
         String sql = "DELETE FROM films WHERE id = ?";
         jdbc.update(sql, id);
+    }
+
+    // Метод для добавления лайка фильму
+    public void addLike(long filmId, long userId) {
+        String sql = "INSERT INTO film_likes (film_id, user_id) VALUES (?, ?)";
+        jdbc.update(sql, filmId, userId);
+    }
+
+    // Метод для удаления лайка у фильма
+    public void removeLike(long filmId, long userId) {
+        String sql = "DELETE FROM film_likes WHERE film_id = ? AND user_id = ?";
+        jdbc.update(sql, filmId, userId);
+    }
+
+    // Метод для подсчета лайков для фильма
+    public int getLikeCount(long filmId) {
+        String sql = "SELECT COUNT(*) FROM film_likes WHERE film_id = ?";
+        return jdbc.queryForObject(sql, Integer.class, filmId);
+    }
+
+    private void updateFilmGenres(Film film) {
+        String deleteSql = "DELETE FROM film_genres WHERE film_id = ?";
+        jdbc.update(deleteSql, film.getId());
+
+        String insertSql = "INSERT INTO film_genres (film_id, genre_id) VALUES (?, ?)";
+        for (Genre genre : film.getGenres()) {
+            jdbc.update(insertSql, film.getId(), genre.getId());
+        }
     }
 }
