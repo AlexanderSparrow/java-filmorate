@@ -23,7 +23,7 @@ public class GenreDbStorage implements GenreStorage {
 
     @Override
     public Optional<Genre> getGenreById(long id) {
-    return genreRepository.findById(id);
+        return genreRepository.findById(id);
     }
 
 }

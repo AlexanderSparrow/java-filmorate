@@ -24,7 +24,6 @@ public class InMemoryFilmStorage implements FilmStorage {
         if (films.containsKey(film.getId())) {
             throw new ValidationException("Фильм с таким id уже существует");
         }
- //       validateReleaseDate(film);
         film.setId(nextId++);
         films.put(film.getId(), film);
         return film;
