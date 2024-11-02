@@ -81,24 +81,6 @@ public class FilmRepository {
         jdbc.update(sql, id);
     }
 
-    // Метод для добавления лайка фильму
-    public void addLike(long filmId, long userId) {
-        String sql = "INSERT INTO film_likes (film_id, user_id) VALUES (?, ?)";
-        jdbc.update(sql, filmId, userId);
-    }
-
-    // Метод для удаления лайка у фильма
-    public void removeLike(long filmId, long userId) {
-        String sql = "DELETE FROM film_likes WHERE film_id = ? AND user_id = ?";
-        jdbc.update(sql, filmId, userId);
-    }
-
-    // Метод для подсчета лайков для фильма
-    public int getLikeCount(long filmId) {
-        String sql = "SELECT COUNT(*) FROM film_likes WHERE film_id = ?";
-        return jdbc.queryForObject(sql, Integer.class, filmId);
-    }
-
     private void updateFilmGenres(Film film) {
         String deleteSql = "DELETE FROM film_genres WHERE film_id = ?";
         jdbc.update(deleteSql, film.getId());

@@ -26,7 +26,8 @@ class UserDbStorageTest {
     }
 
     @Test
-    @DirtiesContext // Сброс контекста после теста
+    @DirtiesContext
+        // Сброс контекста после теста
     void testAddUser() {
         User user = new User();
         user.setEmail("test@example.com");
@@ -40,7 +41,8 @@ class UserDbStorageTest {
     }
 
     @Test
-    @DirtiesContext // Сброс контекста после теста
+    @DirtiesContext
+        // Сброс контекста после теста
     void testFindUserById() {
         User user = new User();
         user.setEmail("test@example.com");
@@ -56,7 +58,8 @@ class UserDbStorageTest {
     }
 
     @Test
-    @DirtiesContext // Сброс контекста после теста
+    @DirtiesContext
+        // Сброс контекста после теста
     void testUpdateUser() {
         User user = new User();
         user.setEmail("test@example.com");
@@ -75,7 +78,8 @@ class UserDbStorageTest {
     }
 
     @Test
-    @DirtiesContext // Сброс контекста после теста
+    @DirtiesContext
+        // Сброс контекста после теста
     void testDeleteUser() {
         User user = new User();
         user.setEmail("test@example.com");

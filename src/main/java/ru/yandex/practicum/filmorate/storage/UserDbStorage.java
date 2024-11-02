@@ -49,7 +49,7 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public void addFriend(long userId, long friendId, int statusId) {
-        userRepository.addFriend(userId, friendId, statusId);
+        friendshipRepository.addFriend(userId, friendId, statusId);
     }
 
     @Override

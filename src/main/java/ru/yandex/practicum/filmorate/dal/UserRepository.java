@@ -60,16 +60,6 @@ public class UserRepository {
         return new HashSet<>(jdbc.queryForList(query, Long.class, userId));
     }
 
-    public void addFriend(long userId, long friendId, int statusId) {
-        String query = "INSERT INTO friendships (user_id, friend_id, status_id) VALUES (?, ?, ?)";
-        jdbc.update(query, userId, friendId, statusId);
-    }
-
-    public void removeFriend(long userId, long friendId) {
-        String query = "DELETE FROM friendships WHERE user_id = ? AND friend_id = ?";
-        jdbc.update(query, userId, friendId);
-    }
-
     public User getUserById(long id) {
         User user = jdbc.queryForObject("SELECT * FROM users WHERE id = ?", new Object[]{id}, mapper);
         Set<Long> friends = this.getUserFriends(id);  // Получаем список друзей в сервисе
