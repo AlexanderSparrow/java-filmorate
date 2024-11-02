@@ -58,6 +58,7 @@ public class UserService {
         log.info("Пользователь {} добавлен в друзья пользователю {}", userId, friendId);
         friend.getFriends().add(userId);  // Добавляем пользователя другу
         friendshipRepository.addFriend(userId, friendId, 1);; //TODO
+        //friendshipRepository.addFriend(friendId, userId, 2);; //TODO
         userStorage.updateUser(user);     // Обновляем пользователя
         userStorage.updateUser(friend);   // Обновляем друга
     }
@@ -100,6 +101,8 @@ public class UserService {
 
     public Set<User> getUserFriends(Long userId) {
         log.info("Получение списка друзей для пользователя {}", userId);
+        if (!userStorage.getUserById(userId).isPresent())
+            throw new UserNotFoundException(userId);
         return friendshipRepository.getUserFriends(userId).stream()
                 .map(friendId -> userStorage.getUserById(friendId)
                         .orElseThrow(() -> new UserNotFoundException(friendId)))
