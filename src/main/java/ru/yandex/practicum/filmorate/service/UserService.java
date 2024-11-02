@@ -50,11 +50,14 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException(userId));
         User friend = userStorage.getUserById(friendId)
                 .orElseThrow(() -> new UserNotFoundException(friendId));
+        if (user.getFriends().contains(friendId)) {
+            throw new DuplicateKeyException("Друг уже добавлен");
+        }
         log.info("Пользователь {} добавлен в друзья пользователю {}", friendId, userId);
         user.getFriends().add(friendId);  // Добавляем друга пользователю
         log.info("Пользователь {} добавлен в друзья пользователю {}", userId, friendId);
         friend.getFriends().add(userId);  // Добавляем пользователя другу
-        friendshipRepository.addFriend(userId, friendId, 1); //TODO
+        friendshipRepository.addFriend(userId, friendId, 1);; //TODO
         userStorage.updateUser(user);     // Обновляем пользователя
         userStorage.updateUser(friend);   // Обновляем друга
     }
