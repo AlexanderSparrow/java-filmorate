@@ -28,5 +28,4 @@ public class GenreController {
     public Genre getGenreById(@PathVariable long id) {
         return genreService.getGenreById(id);
     }
-
 }
