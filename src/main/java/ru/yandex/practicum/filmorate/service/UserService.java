@@ -54,7 +54,7 @@ public class UserService {
         user.getFriends().add(friendId);  // Добавляем друга пользователю
         log.info("Пользователь {} добавлен в друзья пользователю {}", userId, friendId);
         friend.getFriends().add(userId);  // Добавляем пользователя другу
-        userStorage.addFriend(userId, friendId, 1); //TODO
+        friendshipRepository.addFriend(userId, friendId, 1); //TODO
         userStorage.updateUser(user);     // Обновляем пользователя
         userStorage.updateUser(friend);   // Обновляем друга
     }
@@ -67,7 +67,7 @@ public class UserService {
 
         user.getFriends().remove(friendId);  // Удаляем друга из списка
         friend.getFriends().remove(userId);  // Удаляем пользователя из списка друга
-        userStorage.removeFriend(userId, friendId);//TODO
+        friendshipRepository.removeFriend(userId, friendId);//TODO
         userStorage.updateUser(user);
         userStorage.updateUser(friend);
     }
@@ -97,11 +97,22 @@ public class UserService {
 
     public Set<User> getUserFriends(Long userId) {
         log.info("Получение списка друзей для пользователя {}", userId);
+        return friendshipRepository.getUserFriends(userId).stream()
+                .map(friendId -> userStorage.getUserById(friendId)
+                        .orElseThrow(() -> new UserNotFoundException(friendId)))
+                .collect(Collectors.toSet());
+    }
+
+    public Set<User> getUserFriends_Old(Long userId) {
+        log.info("Получение списка друзей для пользователя {}", userId);
         User user = userStorage.getUserById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
         return user.getFriends().stream()
                 .map(friendId -> userStorage.getUserById(friendId)
                         .orElseThrow(() -> new UserNotFoundException(friendId))) // Получаем объекты User по ID
                 .collect(Collectors.toSet());
+
     }
+
 }
+
