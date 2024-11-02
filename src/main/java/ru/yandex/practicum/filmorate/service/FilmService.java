@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import ru.yandex.practicum.filmorate.dal.FilmLikeRepository;
 import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
@@ -21,15 +20,13 @@ import java.util.stream.Collectors;
 @Service
 public class FilmService {
     private static final LocalDate startReleaseDate = LocalDate.of(1895, 12, 28);
-    private final FilmLikeRepository filmLikeRepository;
     private final FilmStorage filmStorage;
     private final UserService userService;
     private final GenreService genreService;
     private final MpaService mpaService;
     public static final Comparator<Film> FILM_COMPARATOR = Comparator.comparingInt(Film::getRate).reversed();
 
-    public FilmService(FilmLikeRepository filmLikeRepository, @Qualifier("filmDbStorage") FilmStorage filmStorage, UserService userService, GenreService genreService, MpaService mpaService) {
-        this.filmLikeRepository = filmLikeRepository;
+    public FilmService(@Qualifier("filmDbStorage") FilmStorage filmStorage, UserService userService, GenreService genreService, MpaService mpaService) {
         this.filmStorage = filmStorage;
         this.userService = userService;
         this.genreService = genreService;

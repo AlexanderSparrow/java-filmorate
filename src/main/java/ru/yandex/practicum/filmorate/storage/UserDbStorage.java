@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.dal.FriendshipRepository;
 import ru.yandex.practicum.filmorate.dal.UserRepository;
 import ru.yandex.practicum.filmorate.dal.mappers.UserRowMapper;
 import ru.yandex.practicum.filmorate.model.User;
@@ -19,6 +20,7 @@ public class UserDbStorage implements UserStorage {
     private final JdbcTemplate jdbcTemplate;
     private final UserRowMapper userRowMapper;
     private final UserRepository userRepository;
+    private final FriendshipRepository friendshipRepository;
 
     @Override
     public User addUser(User user) {
@@ -52,8 +54,7 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public void removeFriend(long userId, long friendId) {
-        String sql = "DELETE FROM friendships WHERE user_id = ? AND friend_id = ?";
-        jdbcTemplate.update(sql, userId, friendId);
+        friendshipRepository.removeFriend(userId, friendId);
     }
 
     @Override
@@ -63,6 +64,5 @@ public class UserDbStorage implements UserStorage {
                 "WHERE f.user_id = ?";
         return jdbcTemplate.query(sql, new Object[]{userId}, userRowMapper);
     }
-
 }
 
