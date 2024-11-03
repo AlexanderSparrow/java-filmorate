@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - changeSet:
+      id: 7
+      author: AlexSparrow
+      changes:
+        - createTable:
+            tableName: film_genres
+            columns:
+              - column:
+                  name: film_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: genre_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: film_genres
+            columnNames: film_id, genre_id
+            constraintName: pk_film_genres
+        - addForeignKeyConstraint:
+            constraintName: fk_film_genres_film
+            baseTableName: film_genres
+            baseColumnNames: film_id
+            referencedTableName: films
+            referencedColumnNames: id
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            constraintName: fk_film_genres_genre
+            baseTableName: film_genres
+            baseColumnNames: genre_id
+            referencedTableName: genres
+            referencedColumnNames: id
+            onDelete: CASCADE

@@ -1,0 +1,20 @@
+logging:
+  level:
+    org:
+      zalando:
+        logbook: TRACE
+spring:
+  sql:
+    init:
+      mode: always
+  liquibase:
+    enabled: true
+    change-log: classpath:/db/changelog/db.changelog-master.yml
+  datasource:
+    url: jdbc:h2:file:./db/filmorate
+    driverClassName: org.h2.Driver
+    username: sa
+    password: password
+  h2:
+    console:
+      enabled: true
