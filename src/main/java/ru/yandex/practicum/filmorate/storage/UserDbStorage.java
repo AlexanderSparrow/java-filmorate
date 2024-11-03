@@ -48,8 +48,8 @@ public class UserDbStorage implements UserStorage {
     }
 
     @Override
-    public void addFriend(long userId, long friendId, int statusId) {
-        friendshipRepository.addFriend(userId, friendId, statusId);
+    public void addFriend(long userId, long friendId) {
+        friendshipRepository.addFriend(userId, friendId);
     }
 
     @Override
@@ -57,12 +57,18 @@ public class UserDbStorage implements UserStorage {
         friendshipRepository.removeFriend(userId, friendId);
     }
 
-    @Override
+/*    @Override
     public List<User> getFriends(long userId) {
         String sql = "SELECT u.* FROM users u " +
                 "JOIN friendships f ON u.id = f.friend_id " +
                 "WHERE f.user_id = ?";
         return jdbcTemplate.query(sql, new Object[]{userId}, userRowMapper);
+    }*/
+
+    @Override
+    public List<User> getFriends(long userId) {
+        return friendshipRepository.getUserFriends(userId);
     }
 }
+
 

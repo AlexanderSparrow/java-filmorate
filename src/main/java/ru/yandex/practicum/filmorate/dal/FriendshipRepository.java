@@ -3,6 +3,8 @@ package ru.yandex.practicum.filmorate.dal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.dal.mappers.UserRowMapper;
+import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.List;
 
@@ -10,11 +12,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FriendshipRepository {
     private final JdbcTemplate jdbcTemplate;
+    private final UserRowMapper userRowMapper;
+
 
     // Добавить друга
-    public void addFriend(long userId, long friendId, int statusId) {
-        String sql = "INSERT INTO friendships (user_id, friend_id, status_id) VALUES (?, ?, ?)";
-        jdbcTemplate.update(sql, userId, friendId, statusId);
+    public void addFriend(long userId, long friendId) {
+        String sql = "INSERT INTO friendships (user_id, friend_id) VALUES (?, ?)";
+        jdbcTemplate.update(sql, userId, friendId);
     }
 
     // Удалить друга
@@ -24,9 +28,16 @@ public class FriendshipRepository {
     }
 
     // Получить список друзей пользователя
-    public List<Long> getUserFriends(long userId) {
+    /*public List<Long> getUserFriends(long userId) {
         String sql = "SELECT friend_id FROM friendships WHERE user_id = ?";
         return jdbcTemplate.queryForList(sql, Long.class, userId);
+    }*/
+
+    public List<User> getUserFriends(long userId) {
+        String sql = "SELECT u.* FROM users u " +
+                "JOIN friendships f ON u.id = f.friend_id " +
+                "WHERE f.user_id = ?";
+        return jdbcTemplate.query(sql, new Object[]{userId}, userRowMapper);
     }
 
     // Получить статус дружбы между пользователями

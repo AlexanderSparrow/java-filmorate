@@ -4,7 +4,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.dal.FriendshipRepository;
 import ru.yandex.practicum.filmorate.exception.DuplicateKeyException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
@@ -16,18 +15,14 @@ import java.util.stream.Collectors;
 
 @Log4j2
 @Service
-//@RequiredArgsConstructor
 public class UserService {
     @Qualifier("userDbStorage")
     private final UserStorage userStorage;
-    private final FriendshipRepository friendshipRepository;
 
 
     @Autowired
-    public UserService(@Qualifier("userDbStorage") UserStorage userStorage,
-                       FriendshipRepository friendshipRepository) {
+    public UserService(@Qualifier("userDbStorage") UserStorage userStorage) {
         this.userStorage = userStorage;
-        this.friendshipRepository = friendshipRepository;
     }
 
     public User addUser(User user) {
@@ -57,8 +52,7 @@ public class UserService {
         user.getFriends().add(friendId);  // Добавляем друга пользователю
         log.info("Пользователь {} добавлен в друзья пользователю {}", userId, friendId);
         friend.getFriends().add(userId);  // Добавляем пользователя другу
-        friendshipRepository.addFriend(userId, friendId, 1);; //TODO
-        //friendshipRepository.addFriend(friendId, userId, 2);; //TODO
+        userStorage.addFriend(userId, friendId);;
         userStorage.updateUser(user);     // Обновляем пользователя
         userStorage.updateUser(friend);   // Обновляем друга
     }
@@ -71,7 +65,7 @@ public class UserService {
 
         user.getFriends().remove(friendId);  // Удаляем друга из списка
         friend.getFriends().remove(userId);  // Удаляем пользователя из списка друга
-        friendshipRepository.removeFriend(userId, friendId);//TODO
+        userStorage.removeFriend(userId, friendId);//TODO
         userStorage.updateUser(user);
         userStorage.updateUser(friend);
     }
@@ -101,24 +95,12 @@ public class UserService {
 
     public Set<User> getUserFriends(Long userId) {
         log.info("Получение списка друзей для пользователя {}", userId);
-        if (!userStorage.getUserById(userId).isPresent())
-            throw new UserNotFoundException(userId);
-        return friendshipRepository.getUserFriends(userId).stream()
-                .map(friendId -> userStorage.getUserById(friendId)
-                        .orElseThrow(() -> new UserNotFoundException(friendId)))
-                .collect(Collectors.toSet());
-    }
-
-    public Set<User> getUserFriends_Old(Long userId) {
-        log.info("Получение списка друзей для пользователя {}", userId);
         User user = userStorage.getUserById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
         return user.getFriends().stream()
                 .map(friendId -> userStorage.getUserById(friendId)
                         .orElseThrow(() -> new UserNotFoundException(friendId))) // Получаем объекты User по ID
                 .collect(Collectors.toSet());
-
     }
-
 }
 

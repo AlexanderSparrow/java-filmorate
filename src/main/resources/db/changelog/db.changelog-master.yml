@@ -17,3 +17,5 @@ databaseChangeLog:
       file: "db/changelog/changeset/8-create-film-likes-table.yml"
   - include:
      file: "/db/changelog/changeset/9-init-tables.yml"
+  - include:
+     file: "db/changelog/changeset/10-safe-delete-friendshipstatus-table.yml"
