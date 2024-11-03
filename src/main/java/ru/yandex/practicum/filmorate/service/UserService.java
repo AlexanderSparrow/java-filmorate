@@ -1,6 +1,6 @@
 package ru.yandex.practicum.filmorate.service;
 
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ import ru.yandex.practicum.filmorate.storage.UserStorage;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Log4j2
+@Slf4j
 @Service
 public class UserService {
     @Qualifier("userDbStorage")
@@ -53,8 +53,6 @@ public class UserService {
         log.info("Пользователь {} добавлен в друзья пользователю {}", userId, friendId);
         friend.getFriends().add(userId);  // Добавляем пользователя другу
         userStorage.addFriend(userId, friendId);;
-        userStorage.updateUser(user);     // Обновляем пользователя
-        userStorage.updateUser(friend);   // Обновляем друга
     }
 
     public void removeFriend(Long userId, Long friendId) {
@@ -65,9 +63,8 @@ public class UserService {
 
         user.getFriends().remove(friendId);  // Удаляем друга из списка
         friend.getFriends().remove(userId);  // Удаляем пользователя из списка друга
-        userStorage.removeFriend(userId, friendId);//TODO
-        userStorage.updateUser(user);
-        userStorage.updateUser(friend);
+        userStorage.removeFriend(userId, friendId);
+
     }
 
     public List<User> getCommonFriends(Long userId1, Long userId2) {

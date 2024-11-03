@@ -7,5 +7,4 @@ public class Friendship {
 
     private long userId;      // ID пользователя, который отправил запрос на дружбу
     private long friendId;    // ID пользователя, которому был отправлен запрос
-    private FriendshipStatus status;  // Статус дружбы (подтверждённая или неподтверждённая)
 }

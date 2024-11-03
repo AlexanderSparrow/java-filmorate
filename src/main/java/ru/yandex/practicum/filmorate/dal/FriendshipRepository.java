@@ -27,12 +27,6 @@ public class FriendshipRepository {
         jdbcTemplate.update(sql, userId, friendId);
     }
 
-    // Получить список друзей пользователя
-    /*public List<Long> getUserFriends(long userId) {
-        String sql = "SELECT friend_id FROM friendships WHERE user_id = ?";
-        return jdbcTemplate.queryForList(sql, Long.class, userId);
-    }*/
-
     public List<User> getUserFriends(long userId) {
         String sql = "SELECT u.* FROM users u " +
                 "JOIN friendships f ON u.id = f.friend_id " +
@@ -40,9 +34,11 @@ public class FriendshipRepository {
         return jdbcTemplate.query(sql, new Object[]{userId}, userRowMapper);
     }
 
-    // Получить статус дружбы между пользователями
-    public Integer getFriendshipStatus(long userId, long friendId) {
-        String sql = "SELECT status_id FROM friendships WHERE user_id = ? AND friend_id = ?";
-        return jdbcTemplate.queryForObject(sql, Integer.class, userId, friendId);
+    public List<User> getCommonFriends(long userId, long friendId) {
+        String sql = "SELECT * FROM USERS u " +
+                "JOIN FRIENDSHIPS f1 ON u.id = f1.friend_id " +
+                "JOIN FRIENDSHIPS f2 ON u.id = f2.friend_id " +
+                "WHERE f1.user_id = ? AND f2.user_id = ?";
+        return jdbcTemplate.query(sql, new Object[]{userId, friendId}, userRowMapper);
     }
 }
