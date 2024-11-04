@@ -3,13 +3,13 @@ package ru.yandex.practicum.filmorate.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
 import java.util.List;
+
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -19,13 +19,8 @@ public class FilmController {
     private final FilmService filmService;
 
     @PostMapping
-    public ResponseEntity<Film> addFilm(@Valid @RequestBody Film film) {
-        log.info("Получен запрос на создание фильма: {}", film);
-        Film createdFilm = filmService.addFilm(film);
-        if (createdFilm == null || createdFilm.getId() == 0) {
-            throw new IllegalStateException("Ошибка при сохранении фильма");
-        }
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdFilm);
+    public Film createFilm(@Valid @RequestBody Film film) {
+        return filmService.addFilm(film);
     }
 
     @PutMapping

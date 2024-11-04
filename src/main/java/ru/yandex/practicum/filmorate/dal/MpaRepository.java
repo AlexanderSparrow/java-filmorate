@@ -26,4 +26,14 @@ public class MpaRepository {
         List<Mpa> mpaList = jdbc.query(query, mapper, id);
         return mpaList.isEmpty() ? Optional.empty() : Optional.of(mpaList.getFirst());
     }
+
+    public Mpa getMpaRating(int ratingId) {
+        String sql = "SELECT * FROM mpa_ratings WHERE id = ?";
+        return jdbc.queryForObject(sql, new Object[]{ratingId}, (rs, rowNum) -> {
+            Mpa rating = new Mpa();
+            rating.setId(rs.getInt("id"));
+            rating.setName(rs.getString("rating"));
+            return rating;
+        });
+    }
 }

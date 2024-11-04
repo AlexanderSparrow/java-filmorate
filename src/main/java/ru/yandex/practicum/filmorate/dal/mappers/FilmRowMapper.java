@@ -1,8 +1,9 @@
 package ru.yandex.practicum.filmorate.dal.mappers;
 
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.dal.GenreRepository;
+import ru.yandex.practicum.filmorate.dal.MpaRepository;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
@@ -10,18 +11,18 @@ import ru.yandex.practicum.filmorate.model.Mpa;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Component
 public class FilmRowMapper implements RowMapper<Film> {
 
-    private final JdbcTemplate jdbcTemplate;
+    private final GenreRepository genreRepository;
+    private final MpaRepository mpaRepository;
 
-    public FilmRowMapper(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }    // Инъекция зависимости UserRepository через конструктор
+    public FilmRowMapper(GenreRepository genreRepository, MpaRepository mpaRepository) {
+        this.genreRepository = genreRepository;
+        this.mpaRepository = mpaRepository;
+    }
 
     @Override
     public Film mapRow(ResultSet resultSet, int rowNum) throws SQLException {
@@ -33,34 +34,13 @@ public class FilmRowMapper implements RowMapper<Film> {
         film.setDuration(resultSet.getInt("duration"));
 
         // Маппинг MPA рейтинга
-        Mpa mpa = getMpaRating(resultSet.getInt("mpa_rating_id"));
+        Mpa mpa = mpaRepository.getMpaRating(resultSet.getInt("mpa_rating_id"));
         film.setMpa(mpa);
 
         // Маппинг жанров
-        Set<Genre> genres = getFilmGenres(film.getId());
+        Set<Genre> genres = genreRepository.getFilmGenres(film.getId());
         film.setGenres(genres);
 
         return film;
-    }
-
-    private Mpa getMpaRating(int ratingId) {
-        String sql = "SELECT * FROM mpa_ratings WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{ratingId}, (rs, rowNum) -> {
-            Mpa rating = new Mpa();
-            rating.setId(rs.getInt("id"));
-            rating.setName(rs.getString("rating"));
-            return rating;
-        });
-    }
-
-    private Set<Genre> getFilmGenres(long filmId) {
-        String sql = "SELECT g.id, g.genre FROM genres g JOIN film_genres fg ON g.id = fg.genre_id WHERE fg.film_id = ?";
-        List<Genre> genres = jdbcTemplate.query(sql, new Object[]{filmId}, (rs, rowNum) -> {
-            Genre genre = new Genre();
-            genre.setId(rs.getInt("id"));
-            genre.setName(rs.getString("genre"));
-            return genre;
-        });
-        return new HashSet<>(genres);
     }
 }

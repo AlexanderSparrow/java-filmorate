@@ -1,24 +1,17 @@
 package ru.yandex.practicum.filmorate.dal.mappers;
 
-import org.springframework.context.annotation.Lazy;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.dal.UserRepository;
-
-import java.util.Set;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Component
+@RequiredArgsConstructor
 public class UserRowMapper implements RowMapper<User> {
-    private final UserRepository userRepository;
 
-    // Инъекция зависимости UserRepository через конструктор
-    public UserRowMapper(@Lazy UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     @Override
     public User mapRow(ResultSet resultSet, int rowNum) throws SQLException {
@@ -28,11 +21,6 @@ public class UserRowMapper implements RowMapper<User> {
         user.setEmail(resultSet.getString("email"));
         user.setLogin(resultSet.getString("login"));
         user.setBirthday(resultSet.getDate("birthday").toLocalDate());
-
-        // Получаем список друзей для пользователя
-        Set<Long> friends = userRepository.getUserFriends(user.getId());
-        user.setFriends(friends);
-
         return user;
     }
 }

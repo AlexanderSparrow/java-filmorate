@@ -60,11 +60,4 @@ public class UserRepository {
         return new HashSet<>(jdbc.queryForList(query, Long.class, userId));
     }
 
-    public User getUserById(long id) {
-        User user = jdbc.queryForObject("SELECT * FROM users WHERE id = ?", new Object[]{id}, mapper);
-        Set<Long> friends = this.getUserFriends(id);  // Получаем список друзей в сервисе
-        assert user != null;
-        user.setFriends(friends);
-        return user;
-    }
 }

@@ -41,4 +41,11 @@ public class FriendshipRepository {
                 "WHERE f1.user_id = ? AND f2.user_id = ?";
         return jdbcTemplate.query(sql, new Object[]{userId, friendId}, userRowMapper);
     }
+
+    public boolean isFriend(long userId, long friendId) {
+        String sql = "SELECT COUNT(*) FROM friendships WHERE user_id = ? AND friend_id = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, new Object[]{userId, friendId}, Integer.class);
+        return count != null && count > 0;
+    }
+
 }

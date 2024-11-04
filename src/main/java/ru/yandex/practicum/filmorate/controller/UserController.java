@@ -20,7 +20,7 @@ public class UserController {
     }
 
     @PutMapping
-    public User updateUser(@Valid @RequestBody User user) {
+    public Optional<User>  updateUser(@Valid @RequestBody User user) {
         return userService.updateUser(user);
     }
 
@@ -45,7 +45,7 @@ public class UserController {
     }
 
     @GetMapping("/{userId}/friends")
-    public Set<User> getUserFriends(@PathVariable Long userId) {
+    public List<User> getUserFriends(@PathVariable Long userId) {
         return userService.getUserFriends(userId);
     }
 
