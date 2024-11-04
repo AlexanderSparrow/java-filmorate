@@ -29,6 +29,7 @@ class FilmorateApplicationTests {
 			validator = factory.getValidator();
 		}
 	}
+
 	//Film tests
 	@Test
 	public void shouldFailWhenFilmNameIsEmpty() {
