@@ -28,7 +28,7 @@ public class FilmRepository {
         return jdbc.query(query, mapper);
     }
 
-    public List<Film> getPopularFilms(int count) {
+    public List<Film> getPopular(int count) {
         String query = """
                 SELECT f.*, COUNT(fl.user_id) AS like_count
                 FROM films f
@@ -48,7 +48,7 @@ public class FilmRepository {
     }
 
     // Добавить новый фильм
-    public Film save(Film film) {
+    public Film add(Film film) {
         String sql = "INSERT INTO films (name, description, release_date, duration, mpa_rating_id) VALUES (?, ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbc.update(connection -> {

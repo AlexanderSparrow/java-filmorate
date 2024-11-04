@@ -38,7 +38,7 @@ public class FilmService {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Жанр с ID " + genre.getId() + " не существует");
             }
         }
-        return filmRepository.save(film);
+        return filmRepository.add(film);
     }
 
     private void validateReleaseDate(Film film) {
@@ -70,7 +70,7 @@ public class FilmService {
     }
 
     public List<Film> getPopularFilms(int count) {
-        return filmRepository.getPopularFilms(count);
+        return filmRepository.getPopular(count);
     }
 
     public List<Film> getAllFilms() {

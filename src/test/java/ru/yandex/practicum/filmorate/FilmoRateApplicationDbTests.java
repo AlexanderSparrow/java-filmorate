@@ -119,7 +119,7 @@ class FilmoRateApplicationDbTests {
         genre.setId(1);
         film.setGenres(new HashSet<>());
 
-        Film savedFilm = filmRepository.save(film);
+        Film savedFilm = filmRepository.add(film);
         assertThat(savedFilm).hasFieldOrPropertyWithValue("id", 1L);
     }
 
@@ -134,7 +134,7 @@ class FilmoRateApplicationDbTests {
         Mpa mpa = new Mpa();
         mpa.setId(1);
         film.setMpa(mpa);
-        filmRepository.save(film);
+        filmRepository.add(film);
 
         Optional<Film> foundFilm = filmRepository.findById(1L);
         assertThat(foundFilm)
@@ -153,7 +153,7 @@ class FilmoRateApplicationDbTests {
         Mpa mpa = new Mpa();
         mpa.setId(1);
         film.setMpa(mpa);
-        Film savedFilm = filmRepository.save(film);
+        Film savedFilm = filmRepository.add(film);
 
         savedFilm.setName("Updated Film");
         filmRepository.update(savedFilm);
@@ -175,7 +175,7 @@ class FilmoRateApplicationDbTests {
         Mpa mpa = new Mpa();
         mpa.setId(1);
         film.setMpa(mpa);
-        filmRepository.save(film);
+        filmRepository.add(film);
 
         filmRepository.deleteById(1L);
         Optional<Film> deletedFilm = filmRepository.findById(1L);
