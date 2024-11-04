@@ -35,15 +35,16 @@ public class FilmRepository {
                 LEFT JOIN film_likes fl ON f.id = fl.film_id
                 GROUP BY f.id
                 ORDER BY like_count DESC
+                LIMIT ?
                 """;
-        return jdbc.query(query, mapper);
+        return jdbc.query(query, mapper, count);
     }
 
     // Найти фильм по ID
     public Optional<Film> findById(long id) {
         String query = "SELECT * FROM films WHERE id = ?";
         List<Film> films = jdbc.query(query, mapper, id);
-        return films.isEmpty() ? Optional.empty() : Optional.of(films.get(0));
+        return films.isEmpty() ? Optional.empty() : Optional.of(films.getFirst());
     }
 
     // Добавить новый фильм
