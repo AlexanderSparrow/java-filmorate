@@ -9,8 +9,10 @@ import ru.yandex.practicum.filmorate.dal.mappers.FilmRowMapper;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Repository
@@ -27,11 +29,13 @@ public class FilmRepository {
     }
 
     public List<Film> getPopularFilms(int count) {
-        String query = "SELECT f.*, COUNT(fl.user_id) AS like_count\n" +
-                "FROM films f\n" +
-                "LEFT JOIN film_likes fl ON f.id = fl.film_id\n" +
-                "GROUP BY f.id\n" +
-                "ORDER BY like_count DESC\n";
+        String query = """
+                SELECT f.*, COUNT(fl.user_id) AS like_count
+                FROM films f
+                LEFT JOIN film_likes fl ON f.id = fl.film_id
+                GROUP BY f.id
+                ORDER BY like_count DESC
+                """;
         return jdbc.query(query, mapper);
     }
 
@@ -50,12 +54,12 @@ public class FilmRepository {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, film.getName());
             ps.setString(2, film.getDescription());
-            ps.setDate(3, java.sql.Date.valueOf(film.getReleaseDate()));
+            ps.setDate(3, Date.valueOf(film.getReleaseDate()));
             ps.setInt(4, film.getDuration());
             ps.setInt(5, film.getMpa().getId());
             return ps;
         }, keyHolder);
-        long filmId = keyHolder.getKey().longValue();
+        long filmId = Objects.requireNonNull(keyHolder.getKey()).longValue();
         film.setId(filmId);
         updateFilmGenres(film);
         return film;

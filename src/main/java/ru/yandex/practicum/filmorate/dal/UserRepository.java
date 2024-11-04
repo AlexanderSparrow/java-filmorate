@@ -53,11 +53,4 @@ public class UserRepository {
         String query = "SELECT * FROM users WHERE id = ?";
         return jdbc.query(query, mapper, id).stream().findFirst();
     }
-
-    // Получаем список идентификаторов друзей пользователя
-    public Set<Long> getUserFriends(long userId) {
-        String query = "SELECT friend_id FROM friendships WHERE user_id = ?";
-        return new HashSet<>(jdbc.queryForList(query, Long.class, userId));
-    }
-
 }
