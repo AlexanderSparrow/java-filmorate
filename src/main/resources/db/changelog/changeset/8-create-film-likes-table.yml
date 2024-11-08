@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - changeSet:
+      id: 8
+      author: AlexSparrow
+      changes:
+        - createTable:
+            tableName: film_likes
+            columns:
+              - column:
+                  name: film_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: film_likes
+            columnNames: film_id, user_id
+            constraintName: pk_film_likes
+        - addForeignKeyConstraint:
+            constraintName: fk_film_likes_film
+            baseTableName: film_likes
+            baseColumnNames: film_id
+            referencedTableName: films
+            referencedColumnNames: id
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            constraintName: fk_film_likes_user
+            baseTableName: film_likes
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            onDelete: CASCADE

@@ -1,0 +1,21 @@
+databaseChangeLog:
+- changeSet:
+    id: 2
+    author: AlexSparrow
+    changes:
+    - createTable:
+        tableName: genres
+        columns:
+          - column:
+              name: id
+              type: BIGINT
+              autoIncrement: true
+              constraints:
+                primaryKey: true
+                nullable: false
+          - column:
+              name: genre
+              type: VARCHAR(50)
+              constraints:
+                nullable: false
+                unique: true

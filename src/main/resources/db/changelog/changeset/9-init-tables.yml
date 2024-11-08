@@ -1,0 +1,93 @@
+databaseChangeLog:
+  - changeSet:
+      id: 9
+      author: AlexSparrow
+      changes:
+        - insert:
+            tableName: genres
+            columns:
+              - column:
+                  name: genre
+                  value: "Комедия"
+        - insert:
+            tableName: genres
+            columns:
+              - column:
+                  name: genre
+                  value: "Драма"
+        - insert:
+            tableName: genres
+            columns:
+              - column:
+                  name: genre
+                  value: "Мультфильм"
+        - insert:
+            tableName: genres
+            columns:
+              - column:
+                  name: genre
+                  value: "Триллер"
+        - insert:
+            tableName: genres
+            columns:
+              - column:
+                  name: genre
+                  value: "Документальный"
+        - insert:
+            tableName: genres
+            columns:
+              - column:
+                  name: genre
+                  value: "Боевик"
+
+  - changeSet:
+      id: 10
+      author: "user"
+      changes:
+        - insert:
+            tableName: mpa_ratings
+            columns:
+              - column:
+                  name: rating
+                  value: "G"
+        - insert:
+            tableName: mpa_ratings
+            columns:
+              - column:
+                  name: rating
+                  value: "PG"
+        - insert:
+            tableName: mpa_ratings
+            columns:
+              - column:
+                  name: rating
+                  value: "PG-13"
+        - insert:
+            tableName: mpa_ratings
+            columns:
+              - column:
+                  name: rating
+                  value: "R"
+        - insert:
+            tableName: mpa_ratings
+            columns:
+              - column:
+                  name: rating
+                  value: "NC-17"
+
+  - changeSet:
+      id: 11
+      author: "user"
+      changes:
+        - insert:
+            tableName: friendship_status
+            columns:
+              - column:
+                  name: status
+                  value: "неподтверждённая"
+        - insert:
+            tableName: friendship_status
+            columns:
+              - column:
+                  name: status
+                  value: "подтверждённая"

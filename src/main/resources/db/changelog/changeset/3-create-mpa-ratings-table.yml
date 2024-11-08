@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - changeSet:
+      id: 3
+      author: author
+      changes:
+      - createTable:
+          tableName: mpa_ratings
+          columns:
+          - column:
+              name: id
+              type: BIGINT
+              autoIncrement: true
+              constraints:
+                primaryKey: true
+                nullable: false
+          - column:
+              name: rating
+              type: VARCHAR(50)
+              constraints:
+                nullable: false
+                unique: true

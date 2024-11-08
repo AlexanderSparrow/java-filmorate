@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: remove-friendship-status-table
+      author: AlexSparrow
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: friendships
+            constraintName: fk_friendships_status_id  # Имя ограничения, связывающего столбец status_id с таблицей friendship_status
+        - dropColumn:
+            tableName: friendships
+            columnName: status_id
+        - dropTable:
+            tableName: friendship_status

@@ -2,15 +2,19 @@ package ru.yandex.practicum.filmorate.model;
 
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
 @Data
+@Setter
+@Getter
 public class Film {
 
-    private int id;
+    private long id;
 
     @NotBlank(message = "Название фильма не может быть пустым")
     private String name;
@@ -24,8 +28,16 @@ public class Film {
     @Positive(message = "Продолжительность фильма должна быть положительным числом")
     private int duration;
 
+    // Поле для хранения жанров фильма
+    @NotNull(message = "Жанр фильма должен быть указан")
+    private Set<Genre> genres = new HashSet<>();
+
+    // Поле для хранения рейтинга Ассоциации кинокомпаний
+    @NotNull(message = "Рейтинг фильма должен быть указан")
+    private Mpa mpa;
+
     // Поле для хранения ID пользователей, поставивших лайк фильму
-    private Set<Integer> userIds = new HashSet<>();
+    private Set<Long> userIds = new HashSet<>();
 
     public int getRate() {
         return userIds.size(); // Количество лайков

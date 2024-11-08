@@ -1,0 +1,46 @@
+databaseChangeLog:
+  - changeSet:
+      id: 5
+      author: AlexSparrow
+      changes:
+        - createTable:
+            tableName: friendships
+            columns:
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: friend_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            columnNames: "user_id, friend_id"
+            tableName: friendships
+        - addForeignKeyConstraint:
+            constraintName: fk_friendships_user_id
+            baseTableName: friendships
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            constraintName: fk_friendships_friend_id
+            baseTableName: friendships
+            baseColumnNames: friend_id
+            referencedTableName: users
+            referencedColumnNames: id
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            constraintName: fk_friendships_status_id
+            baseTableName: friendships
+            baseColumnNames: status_id
+            referencedTableName: friendship_status
+            referencedColumnNames: id

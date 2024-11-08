@@ -1,85 +1,78 @@
 package ru.yandex.practicum.filmorate.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.dal.FriendshipRepository;
+import ru.yandex.practicum.filmorate.dal.UserRepository;
+import ru.yandex.practicum.filmorate.exception.DuplicateKeyException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.UserStorage;
-import java.util.*;
-import java.util.stream.Collectors;
 
-@Log4j2
+import java.util.*;
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private final UserStorage userStorage;
+    private final UserRepository userRepository;
+    private final FriendshipRepository friendshipRepository;
 
     public User addUser(User user) {
-        return userStorage.addUser(user);
+        try {
+            return userRepository.add(user);
+        } catch (DuplicateKeyException e) {
+            throw new ValidationException("Email already exists: " + user.getEmail());
+        }
     }
 
-    public User updateUser(User user) {
-        return userStorage.updateUser(user);
+    public Optional<User> updateUser(User user) {
+        userRepository.findById(user.getId())
+                .orElseThrow(() -> new UserNotFoundException(user.getId()));
+        return Optional.ofNullable(userRepository.update(user));
     }
 
-    public void addFriend(int userId, int friendId) {
+    public void addFriend(long userId, long friendId) {
         log.info("Добавление друга {} к пользователю {}", friendId, userId);
-        User user = userStorage.getUserById(userId)
+        userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
-        User friend = userStorage.getUserById(friendId)
+        userRepository.findById(friendId)
                 .orElseThrow(() -> new UserNotFoundException(friendId));
+
+        if (friendshipRepository.isFriend(userId, friendId)) {
+            throw new DuplicateKeyException("Друг уже добавлен");
+        }
+
+        friendshipRepository.addFriend(userId, friendId);
         log.info("Пользователь {} добавлен в друзья пользователю {}", friendId, userId);
-        user.getFriends().add(friendId);  // Добавляем друга пользователю
-        log.info("Пользователь {} добавлен в друзья пользователю {}", userId, friendId);
-        friend.getFriends().add(userId);  // Добавляем пользователя другу
-        userStorage.updateUser(user);     // Обновляем пользователя
-        userStorage.updateUser(friend);   // Обновляем друга
     }
 
-    public void removeFriend(int userId, int friendId) {
-        User user = userStorage.getUserById(userId)
+    public void removeFriend(Long userId, Long friendId) {
+        userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
-        User friend = userStorage.getUserById(friendId)
+        userRepository.findById(friendId)
                 .orElseThrow(() -> new UserNotFoundException(friendId));
-
-        user.getFriends().remove(friendId);  // Удаляем друга из списка
-        friend.getFriends().remove(userId);  // Удаляем пользователя из списка друга
-
-        userStorage.updateUser(user);
-        userStorage.updateUser(friend);
+        friendshipRepository.removeFriend(userId, friendId);
     }
 
-    public List<User> getCommonFriends(int userId1, int userId2) {
-        log.info("Получение спискаобщих друзей для пользователя {} и пользователя {}", userId1, userId2);
-        User user1 = userStorage.getUserById(userId1)
-                .orElseThrow(() -> new UserNotFoundException(userId1));
-        User user2 = userStorage.getUserById(userId2)
-                .orElseThrow(() -> new UserNotFoundException(userId2));
-        Set<Integer> user1Friends = user1.getFriends();
-        Set<Integer> user2Friends = user2.getFriends();
-        user1Friends.retainAll(user2Friends); // Оставляем только общих друзей
-        return userStorage.getAllUsers().stream()
-                .filter(user -> user1Friends.contains(user.getId()))
-                .collect(Collectors.toList());
+    public List<User> getCommonFriends(Long userId1, Long userId2) {
+        return friendshipRepository.getCommonFriends(userId1, userId2);
     }
 
     public List<User> getAllUsers() {
-        return userStorage.getAllUsers();
+        return userRepository.findAll();
     }
 
-    public Optional<User> getUserById(int userId) {
-        return userStorage.getUserById(userId);
+    public Optional<User> getUserById(long id) {
+        return Optional.ofNullable(userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id)));
     }
 
-    public Set<User> getUserFriends(int userId) {
-        log.info("Получение списка друзей для пользователя {}", userId);
-        User user = userStorage.getUserById(userId)
+    public List<User> getUserFriends(Long userId) {
+        userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
-        return user.getFriends().stream()
-                .map(friendId -> userStorage.getUserById(friendId)
-                        .orElseThrow(() -> new UserNotFoundException(friendId))) // Получаем объекты User по ID
-                .collect(Collectors.toSet());
+        return friendshipRepository.getUserFriends(userId);
     }
-
 }
+
