@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.dal;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -11,6 +12,7 @@ import ru.yandex.practicum.filmorate.model.User;
 import java.sql.PreparedStatement;
 import java.util.*;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class UserRepository {
@@ -30,27 +32,33 @@ public class UserRepository {
         }, keyHolder);
 
         user.setId(Objects.requireNonNull(keyHolder.getKey()).longValue());
+        log.info("Добавлен пользователь: {}", user);
         return user;
     }
 
     public void delete(long id) {
+
         String sql = "DELETE FROM users WHERE id = ?";
         jdbc.update(sql, id);
+        log.info("Удален пользователь: id={}", id);
     }
 
     public User update(User user) {
         String sql = "UPDATE users SET name = ?, login = ?, email = ?, birthday = ? WHERE id = ?";
         jdbc.update(sql, user.getName(), user.getLogin(), user.getEmail(), user.getBirthday(), user.getId());
+        log.info("Обновлен пользователь: id={}", user.getId());
         return user;
     }
 
     public List<User> findAll() {
         String query = "SELECT * FROM users";
+        log.info("Список пользователей:");
         return jdbc.query(query, mapper);
     }
 
     public Optional<User> findById(long id) {
         String query = "SELECT * FROM users WHERE id = ?";
+        log.info("Найден пользователь с id={}", id);
         return jdbc.query(query, mapper, id).stream().findFirst();
     }
 }
