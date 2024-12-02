@@ -1,0 +1,21 @@
+databaseChangeLog:
+- changeSet:
+    id: 12
+    author: AlexSparrow
+    changes:
+    - createTable:
+        tableName: directors
+        columns:
+          - column:
+              name: id
+              type: BIGINT
+              autoIncrement: true
+              constraints:
+                primaryKey: true
+                nullable: false
+          - column:
+              name: director
+              type: VARCHAR(100)
+              constraints:
+                nullable: false
+                unique: true

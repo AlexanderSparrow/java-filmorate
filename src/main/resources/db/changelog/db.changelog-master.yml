@@ -19,3 +19,7 @@ databaseChangeLog:
      file: "/db/changelog/changeset/9-init-tables.yml"
   - include:
      file: "db/changelog/changeset/10-safe-delete-friendshipstatus-table.yml"
+  - include:
+     file: "db/changelog/changeset/12-create-director-table.yml"
+  - include:
+     file: "db/changelog/changeset/11-create-film-directors-table.yml"

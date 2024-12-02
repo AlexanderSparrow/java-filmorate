@@ -6,6 +6,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.dal.mappers.FilmRowMapper;
+import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 
@@ -63,12 +64,19 @@ public class FilmRepository {
         long filmId = Objects.requireNonNull(keyHolder.getKey()).longValue();
         film.setId(filmId);
         updateFilmGenres(film);
+        updateFilmDirector(film);
         return film;
     }
 
     // Обновить фильм
     public Film update(Film film) {
-        String sql = "UPDATE films SET name = ?, description = ?, release_date = ?, duration = ?, mpa_rating_id = ? WHERE id = ?";
+        String sql = "UPDATE films SET " +
+                     "name = ?, " +
+                     "description = ?, " +
+                     "release_date = ?, " +
+                     "duration = ?, " +
+                     "mpa_rating_id = ? " +
+                     "WHERE id = ?";
         jdbc.update(sql,
                 film.getName(),
                 film.getDescription(),
@@ -77,6 +85,7 @@ public class FilmRepository {
                 film.getMpa().getId(),
                 film.getId());
         updateFilmGenres(film);
+        updateFilmDirector(film);
         return film;
     }
 
@@ -87,12 +96,22 @@ public class FilmRepository {
     }
 
     private void updateFilmGenres(Film film) {
-        String deleteSql = "DELETE FROM film_genres WHERE film_id = ?";
+        String deleteSql = "DELETE FROM FILM_GENRES WHERE FILM_ID = ?";
         jdbc.update(deleteSql, film.getId());
 
-        String insertSql = "INSERT INTO film_genres (film_id, genre_id) VALUES (?, ?)";
+        String insertSql = "INSERT INTO FILM_GENRES (FILM_ID, GENRE_ID) VALUES (?, ?)";
         for (Genre genre : film.getGenres()) {
             jdbc.update(insertSql, film.getId(), genre.getId());
+        }
+    }
+
+    private void updateFilmDirector(Film film) {
+        String deleteSql = "DELETE FROM FILM_DIRECTORS WHERE film_id = ?";
+        jdbc.update(deleteSql, film.getId());
+
+        String insertSql = "INSERT INTO FILM_DIRECTORS (film_id, DIRECTOR_ID) VALUES (?, ?)";
+        for (Director director : film.getDirectors()) {
+            jdbc.update(insertSql, film.getId(), director.getId());
         }
     }
 }

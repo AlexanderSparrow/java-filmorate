@@ -1,9 +1,12 @@
 package ru.yandex.practicum.filmorate.dal.mappers;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.dal.DirectorRepository;
 import ru.yandex.practicum.filmorate.dal.GenreRepository;
 import ru.yandex.practicum.filmorate.dal.MpaRepository;
+import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
@@ -14,15 +17,12 @@ import java.sql.SQLException;
 import java.util.Set;
 
 @Component
+@RequiredArgsConstructor
 public class FilmRowMapper implements RowMapper<Film> {
 
     private final GenreRepository genreRepository;
     private final MpaRepository mpaRepository;
-
-    public FilmRowMapper(GenreRepository genreRepository, MpaRepository mpaRepository) {
-        this.genreRepository = genreRepository;
-        this.mpaRepository = mpaRepository;
-    }
+    private final DirectorRepository directorRepository;
 
     @Override
     public Film mapRow(ResultSet resultSet, int rowNum) throws SQLException {
@@ -40,6 +40,10 @@ public class FilmRowMapper implements RowMapper<Film> {
         // Маппинг жанров
         Set<Genre> genres = genreRepository.getFilmGenres(film.getId());
         film.setGenres(genres);
+
+        //Маппинг режиссеров
+        Set < Director> directors = directorRepository.getFilmDirectors(film.getId());
+        film.setDirectors(directors);
 
         return film;
     }

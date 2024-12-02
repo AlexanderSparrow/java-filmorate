@@ -32,6 +32,10 @@ public class Film {
     @NotNull(message = "Жанр фильма должен быть указан")
     private Set<Genre> genres = new HashSet<>();
 
+    // Поле для хранения режиссеров фильма
+    @NotNull(message = "Режиссер(ы) фильма должен быть указан")
+    private Set<Director> directors = new HashSet<>();
+
     // Поле для хранения рейтинга Ассоциации кинокомпаний
     @NotNull(message = "Рейтинг фильма должен быть указан")
     private Mpa mpa;

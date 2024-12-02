@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - changeSet:
+      id: 11
+      author: AlexSparrow
+      changes:
+        - createTable:
+            tableName: film_directors
+            columns:
+              - column:
+                  name: film_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: director_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: film_directors
+            columnNames: film_id, director_id
+            constraintName: pk_film_directors
+        - addForeignKeyConstraint:
+            constraintName: fk_film_directors_film
+            baseTableName: film_directors
+            baseColumnNames: film_id
+            referencedTableName: films
+            referencedColumnNames: id
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            constraintName: fk_film_directors_director
+            baseTableName: film_directors
+            baseColumnNames: director_id
+            referencedTableName: directors
+            referencedColumnNames: id
+            onDelete: CASCADE
